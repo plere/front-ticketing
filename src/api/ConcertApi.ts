@@ -4,6 +4,7 @@ import type { GetConcertDetailResponse } from "./type/GetConcertDetailResponse";
 import type { GetEmptySeatByRoundIdResponse } from "./type/GetEmptySeatByRoundIdResponse";
 import type { GetCurrentSeatResponse } from "./type/GetCurrentSeatResponse";
 import { setupInterceptors } from "./axiosInterceptor";
+import type { ReservationToken } from "../types/ReservationToken";
 
 const api = setupInterceptors(axios.create({
   baseURL: "http://localhost:8080", // Spring 서버
@@ -34,8 +35,10 @@ export const getEmptySeatByRoundIdApi = async (id: number): Promise<GetEmptySeat
   return response.data.body.emptySeats;  
 };
 
-export const getCurrentSeatApi = async (roundId: number): Promise<GetCurrentSeatResponse> => {
-  const response = await api.get<{body: GetCurrentSeatResponse}>(`/concerts/rounds/${roundId}/seats`);
+export const getCurrentSeatApi = async (roundId: number, reservationToken: ReservationToken): Promise<GetCurrentSeatResponse> => {
+  const response = await api.get<{body: GetCurrentSeatResponse}>(`/concerts/rounds/${roundId}/seats`, {
+    params: reservationToken
+  });
 
   return response.data.body;
 };

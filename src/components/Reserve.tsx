@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCurrentSeatApi } from "../api/ConcertApi";
 import type { GetCurrentSeatResponse } from "../api/type/GetCurrentSeatResponse";
+import { reservationTokenStore } from '../stores/reservationTokenStore';
 
 export default function Reserve() {
   const { roundId } = useParams<{roundId: string}>();
   const [seatInfo, setSeatInfo] = useState<GetCurrentSeatResponse>();
+  const reservationToken = reservationTokenStore((state) => state.reservationToken)
   
-
   useEffect(() => {
-    getCurrentSeatApi(Number(roundId))
+    getCurrentSeatApi(Number(roundId), reservationToken)
     .then(setSeatInfo)
     .catch(e => {
       console.log("getCurrentSeatApi fail!!");
