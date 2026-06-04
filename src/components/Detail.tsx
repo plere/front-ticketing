@@ -95,7 +95,7 @@ export default function Detail() {
               )}
           </div>
         </div>
-        <button type="button" onClick={() => navigate(`/${roundId}/reserve`)}>예매하기</button>
+        <button type="button" onClick={() => navigate(`/concerts/${id}/${roundId}/reserve/waiting`)}>예매하기</button>
       </div>
     </div>
   );
