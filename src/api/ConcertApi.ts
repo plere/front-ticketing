@@ -39,9 +39,3 @@ export const getCurrentSeatApi = async (roundId: number): Promise<GetCurrentSeat
 
   return response.data.body;
 };
-
-export const testConcertApi = async () => {
-  await api.post(`/internal/concerts/seats`, {
-    seatIds: [...new Set([46,47,48])]
-  });
-};
