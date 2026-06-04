@@ -1,9 +1,11 @@
 import axios from "axios";
+import { setupInterceptors } from "./axiosInterceptor";
 
-const api = axios.create({
-  baseURL: "http://localhost:8083", // Spring 서버
-  withCredentials: true
-});
+const api = setupInterceptors(
+  axios.create({
+    baseURL: "http://localhost:8083", // Spring 서버
+    withCredentials: true
+}));
 
 
 type TempReservation = {

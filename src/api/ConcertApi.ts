@@ -3,10 +3,12 @@ import type { GetAllConcertPageResponse } from "./type/GetAllConcertResponse";
 import type { GetConcertDetailResponse } from "./type/GetConcertDetailResponse";
 import type { GetEmptySeatByRoundIdResponse } from "./type/GetEmptySeatByRoundIdResponse";
 import type { GetCurrentSeatResponse } from "./type/GetCurrentSeatResponse";
+import { setupInterceptors } from "./axiosInterceptor";
 
-const api = axios.create({
+const api = setupInterceptors(axios.create({
   baseURL: "http://localhost:8080", // Spring 서버
-});
+  withCredentials: true
+}));
 
 export const getAllConcertApi = async (page:number, size: number, name?: string): Promise<GetAllConcertPageResponse> => {
   const response = await api.get<{body: GetAllConcertPageResponse}>(`/concerts`, {

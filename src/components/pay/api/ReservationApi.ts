@@ -1,11 +1,13 @@
 import axios from "axios";
 import type { executePaymentRequest, PayInfo } from "./type/PayInfo";
 import type { CreateResponse } from "../../../common/api/type/CreateResponse";
+import { setupInterceptors } from "../../../api/axiosInterceptor";
 
-const api = axios.create({
-  baseURL: "http://localhost:8083", // reservation 서버
-  withCredentials: true
-});
+const api = setupInterceptors(
+  axios.create({
+    baseURL: "http://localhost:8083", // reservation 서버
+    withCredentials: true
+}));
 
 export const getPayInfo = async (id: number): Promise<PayInfo> => {
   const response = await api.get<{body: PayInfo}>(`/reservation/payment/${id}`);
