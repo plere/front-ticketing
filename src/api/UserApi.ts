@@ -10,7 +10,10 @@ const api = setupInterceptors(
 
 export const getMeApi = async (): Promise<GetMeResponse> => {
   const response = await api.get<{body: GetMeResponse}>(`/users/me`, {
-      skipGlobal401: true
+    handlers: [{
+     status: 401,
+     handler: (error) => Promise.reject(error) 
+    }]
     } as CustomAxiosRequestConfig
   );
 

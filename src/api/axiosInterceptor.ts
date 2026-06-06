@@ -2,7 +2,11 @@ import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConf
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   skipGlobal401?: boolean; // 이 값이 true면 공통 401 처리를 무시함
-}
+  handlers?: {
+    status: number,
+    handler: (error: AxiosError) => Promise<never>
+  }[];
+};
 
 export const setupInterceptors = (axiosInstance: AxiosInstance): AxiosInstance => {
   axiosInstance.interceptors.response.use(
@@ -15,9 +19,10 @@ export const setupInterceptors = (axiosInstance: AxiosInstance): AxiosInstance =
         const { status } = error.response;
 
         if (status === 401) {
-          if (originalConfig && originalConfig.skipGlobal401) {
-            console.log('공통 401 처리를 건너뛰고 컴포넌트로 에러를 넘깁니다.');
-            return Promise.reject(error);
+          const findHandler = originalConfig?.handlers?.find(handler => handler.status === 401);
+
+          if(findHandler) {
+            return findHandler?.handler(error);
           }
           
           console.error('인증 에러: 로그인이 필요합니다.');
