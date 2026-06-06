@@ -22,16 +22,14 @@ type readyReservationPayRes = {
   amount: number
 }
 
-export const createTempReservationApi = async (): Promise<void> => {
-  const body = {
-    concertId: 6,
-    roundId: 13,
-    seatIds: [
-      51,52
-    ]
-  };
+export const createTempReservationApi = async (concertId: number, roundId: number, seatIds: number[]): Promise<TempReservation> => {
+  const response = await api.post<{body: TempReservation}>(`/reservation/temp/concerts`, {
+    concertId,
+    roundId,
+    seatIds
+  });
 
-  await api.post(`/reservation/temp/concerts`, body);
+  return response.data.body;
 };
 
 export const getTempReservation = async (): Promise<void> => {
