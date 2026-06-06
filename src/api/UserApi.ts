@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { GetMeResponse } from "./type/GetMeResponse";
-import { setupInterceptors } from "./axiosInterceptor";
+import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterceptor";
 
 const api = setupInterceptors(
   axios.create({
@@ -9,8 +9,10 @@ const api = setupInterceptors(
 }));
 
 export const getMeApi = async (): Promise<GetMeResponse> => {
-  const response = await api.get<{body: GetMeResponse}>(`/users/me`);
-  console.log("call getme")
+  const response = await api.get<{body: GetMeResponse}>(`/users/me`, {
+      skipGlobal401: true
+    } as CustomAxiosRequestConfig
+  );
 
   return response.data.body;
 };
