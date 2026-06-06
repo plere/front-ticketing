@@ -32,7 +32,7 @@ export default function ReserveWaiting() {
         getReservationTokenApi(waitingToken!)
         .then(res => {
           setReservationToken(res);
-          navigate(`/${roundId}/reserve`);
+          navigate(`/concerts/${concertId}/${roundId}/reserve`);
         })
       }
     }

@@ -24,7 +24,7 @@ function App() {
       <Route element={<Layout />}>
         <Route path='/' element={<Home />} />
         <Route path='/:id' element={<Detail />} />
-        <Route path='/:roundId/reserve' element={<Reserve />} />
+        <Route path='/concerts/:concertId/:roundId/reserve' element={<Reserve />} />
         <Route path='/concerts/:concertId/:roundId/reserve/waiting' element={<ReserveWaiting />} />
         <Route path='/pay/checkout' element={<CheckoutPage />} />
         <Route path='/pay/success' element={<PaySuccessPage />} />
