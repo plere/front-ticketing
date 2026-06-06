@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setupInterceptors } from "./axiosInterceptor";
+import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterceptor";
 
 const api = setupInterceptors(
   axios.create({
@@ -27,7 +27,12 @@ export const createTempReservationApi = async (concertId: number, roundId: numbe
     concertId,
     roundId,
     seatIds
-  });
+  }, {
+    handlers: [{
+      status: 409,
+      handler: (error) => Promise.reject(error) 
+    }]
+  } as CustomAxiosRequestConfig);
 
   return response.data.body;
 };
