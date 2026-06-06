@@ -22,6 +22,7 @@ export type GetCurrentRowSeatResponse = {
 export type GetCurrentSeatState = "EMPTY" | "RESERVED";
 
 export type GetCurrentColumnSeatResponse = {
+  id: number,
   column: number,
   state: GetCurrentSeatState
 };
