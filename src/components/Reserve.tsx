@@ -1,6 +1,6 @@
 import './css/Reserve.css';
 import React, { act, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCurrentSeatApi } from "../api/ConcertApi";
 import type { GetCurrentColumnSeatResponse, GetCurrentSeatResponse } from "../api/type/GetCurrentSeatResponse";
 import { reservationTokenStore } from '../stores/reservationTokenStore';
@@ -57,6 +57,7 @@ const Modal = ({close} : {
 };
 
 export default function Reserve() {
+  const navigate = useNavigate();
   const { concertId } = useParams<{concertId: string}>();
   const { roundId } = useParams<{roundId: string}>();
   const [seatInfo, setSeatInfo] = useState<GetCurrentSeatResponse>();
@@ -91,6 +92,7 @@ export default function Reserve() {
    .then(res => {
     //todo, tempreservation store에 저장
     console.log("tempreservation!! ", res);
+    navigate(`/concerts/${concertId}/${roundId}/reserve/coupon`);
    })
    .catch(e => {
       setModalView(true);
@@ -149,7 +151,7 @@ export default function Reserve() {
         }
         </div>
         <div>
-          <button type='button' onClick={callReserveApi}>예매하기</button>
+          <button type='button' onClick={callReserveApi}>다음단계</button>
         </div>
       </div>
     </div><br /><br /><br />
