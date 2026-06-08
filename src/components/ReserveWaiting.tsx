@@ -3,6 +3,7 @@ import { getPositionByWaitingTokenApi, getReservationTokenApi, getWaitingTokenAp
 import { useNavigate, useParams } from "react-router-dom";
 import type { WaitingToken } from "../api/type/WaitingTokenResponse";
 import { reservationTokenStore } from "../stores/reservationTokenStore";
+import { getTempReservationApi } from "../api/ReserveApi";
 
 export default function ReserveWaiting() {
   const navigate = useNavigate();
@@ -13,12 +14,19 @@ export default function ReserveWaiting() {
   const intervalRef = useRef<number|null>(null);
   const setReservationToken = reservationTokenStore((state) => state.setRservationToken)
 
+  const initFunc = async () => {
+    const tempReservation = await getTempReservationApi(Number(concertId), Number(roundId));
+    if(tempReservation) {
+      //todo, tempreservation store에 저장
+      navigate(`/concerts/${concertId}/${roundId}/reserve/coupon`);
+    }
+
+    const wt = await getWaitingTokenApi(Number(concertId), Number(roundId))
+    setWaitingToken(wt);
+  }
+
   useEffect(() => {
-    getWaitingTokenApi(Number(concertId), Number(roundId))
-    .then(setWaitingToken)
-    .catch(err => {
-      console.log("getWaitingTokenApi error!!", err)
-    });
+    initFunc();
     }, []);
 
 
