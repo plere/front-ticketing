@@ -2,21 +2,13 @@ import axios from "axios";
 import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterceptor";
 import { reservationTokenStore } from "../stores/reservationTokenStore";
 import { JsonToUrlEncoding } from "../util/JsonToUrlEncdoing";
+import type { TempReservation } from "../types/TempReservation";
 
 const api = setupInterceptors(
   axios.create({
     baseURL: "http://localhost:8083", // Spring 서버
     withCredentials: true
 }));
-
-
-type TempReservation = {
-  id: number, 
-  userId: number,
-  concertId: number,
-  roundId: number,
-  seats: number[]
-};
 
 type readyReservationPayRes = {
   orderId: string,
