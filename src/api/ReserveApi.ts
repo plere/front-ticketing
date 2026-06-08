@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterceptor";
+import type { ReservationToken } from "../types/ReservationToken";
 
 const api = setupInterceptors(
   axios.create({
@@ -37,11 +38,10 @@ export const createTempReservationApi = async (concertId: number, roundId: numbe
   return response.data.body;
 };
 
-export const getTempReservation = async (): Promise<void> => {
-  const response = await api.get<{body: TempReservation}>(`/concerts/6/rounds/13`);
+export const getTempReservationApi = async (concertId: number, roundId: number): Promise<TempReservation> => {
+  const response = await api.get<{body: TempReservation}>(`/reservation/temp/concerts/${concertId}/rounds/${roundId}`);
 
-  console.log("return:")
-  console.log(response.data.body);
+  return response.data.body;
 };
 
 export const readyReservationPay = async (): Promise<void> => {
