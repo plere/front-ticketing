@@ -5,6 +5,7 @@ import { getCurrentSeatApi } from "../api/ConcertApi";
 import type { GetCurrentColumnSeatResponse, GetCurrentSeatResponse } from "../api/type/GetCurrentSeatResponse";
 import { createTempReservationApi } from '../api/ReserveApi';
 import { closeBtnStyle, headerStyle, modalBoxStyle, overlayStyle, titleStyle } from './css/ReserveModal';
+import { tempReservationTokenStore } from '../stores/tempReservationStore';
 
 type SelectSeatType = {
   id: number,
@@ -62,6 +63,7 @@ export default function Reserve() {
   const [seatInfo, setSeatInfo] = useState<GetCurrentSeatResponse>();
   const [selectSeats, setSelectSeats] = useState<SelectSeatType[]>([]);
   const [modalView, setModalView] = useState<boolean>(false);
+  const setTempReservation = tempReservationTokenStore((state) => state.setTempReservation);
   
   useEffect(() => {
     getCurrentSeatApi(Number(roundId))
@@ -88,7 +90,7 @@ export default function Reserve() {
   const callReserveApi = () => {
    createTempReservationApi(Number(concertId), Number(roundId), selectSeats.map((seat) => seat.id))
    .then(res => {
-    //todo, tempreservation store에 저장
+    setTempReservation(res)
     console.log("tempreservation!! ", res);
     navigate(`/concerts/${concertId}/${roundId}/reserve/coupon`);
    })
