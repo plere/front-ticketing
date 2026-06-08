@@ -3,8 +3,9 @@ import type { GetAllConcertPageResponse } from "./type/GetAllConcertResponse";
 import type { GetConcertDetailResponse } from "./type/GetConcertDetailResponse";
 import type { GetEmptySeatByRoundIdResponse } from "./type/GetEmptySeatByRoundIdResponse";
 import type { GetCurrentSeatResponse } from "./type/GetCurrentSeatResponse";
-import { setupInterceptors } from "./axiosInterceptor";
-import type { ReservationToken } from "../types/ReservationToken";
+import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterceptor";
+import { JsonToUrlEncoding } from "../util/JsonToUrlEncdoing";
+import { reservationTokenStore } from "../stores/reservationTokenStore";
 
 const api = setupInterceptors(axios.create({
   baseURL: "http://localhost:8080", // Spring 서버
@@ -35,10 +36,13 @@ export const getEmptySeatByRoundIdApi = async (id: number): Promise<GetEmptySeat
   return response.data.body.emptySeats;  
 };
 
-export const getCurrentSeatApi = async (roundId: number, reservationToken: ReservationToken): Promise<GetCurrentSeatResponse> => {
+export const getCurrentSeatApi = async (roundId: number): Promise<GetCurrentSeatResponse> => {
   const response = await api.get<{body: GetCurrentSeatResponse}>(`/concerts/rounds/${roundId}/seats`, {
-    params: reservationToken
-  });
+      customHeaders: [{
+        name: 'reservation-token',
+        value: () => JsonToUrlEncoding(reservationTokenStore.getState().reservationToken)
+      }]
+    } as CustomAxiosRequestConfig);
 
   return response.data.body;
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterceptor";
-import type { ReservationToken } from "../types/ReservationToken";
+import { reservationTokenStore } from "../stores/reservationTokenStore";
+import { JsonToUrlEncoding } from "../util/JsonToUrlEncdoing";
 
 const api = setupInterceptors(
   axios.create({
@@ -32,6 +33,10 @@ export const createTempReservationApi = async (concertId: number, roundId: numbe
     handlers: [{
       status: 409,
       handler: (error) => Promise.reject(error) 
+    }],
+    customHeaders: [{
+      name: 'reservation-token',
+      value: () => JsonToUrlEncoding(reservationTokenStore.getState().reservationToken)
     }]
   } as CustomAxiosRequestConfig);
 

@@ -1,7 +1,11 @@
 import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { reservationTokenStore } from "../stores/reservationTokenStore";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  skipGlobal401?: boolean; // 이 값이 true면 공통 401 처리를 무시함
+  customHeaders?: {
+    name: string,
+    value: () => string
+  }[];
   handlers?: {
     status: number,
     handler: (error: AxiosError) => Promise<never>
@@ -9,6 +13,16 @@ export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 };
 
 export const setupInterceptors = (axiosInstance: AxiosInstance): AxiosInstance => {
+  axiosInstance.interceptors.request.use(
+    (config: CustomAxiosRequestConfig) => {
+      config.customHeaders?.forEach(({name, value}) => {
+        config.headers.set(name, value());
+      });
+      return config;
+    },
+    (error: AxiosError) => Promise.reject(error)
+  );
+
   axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
       return response;

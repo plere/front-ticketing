@@ -1,9 +1,8 @@
 import './css/Reserve.css';
-import React, { act, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCurrentSeatApi } from "../api/ConcertApi";
 import type { GetCurrentColumnSeatResponse, GetCurrentSeatResponse } from "../api/type/GetCurrentSeatResponse";
-import { reservationTokenStore } from '../stores/reservationTokenStore';
 import { createTempReservationApi } from '../api/ReserveApi';
 import { closeBtnStyle, headerStyle, modalBoxStyle, overlayStyle, titleStyle } from './css/ReserveModal';
 
@@ -61,12 +60,11 @@ export default function Reserve() {
   const { concertId } = useParams<{concertId: string}>();
   const { roundId } = useParams<{roundId: string}>();
   const [seatInfo, setSeatInfo] = useState<GetCurrentSeatResponse>();
-  const reservationToken = reservationTokenStore((state) => state.reservationToken)
   const [selectSeats, setSelectSeats] = useState<SelectSeatType[]>([]);
   const [modalView, setModalView] = useState<boolean>(false);
   
   useEffect(() => {
-    getCurrentSeatApi(Number(roundId), reservationToken)
+    getCurrentSeatApi(Number(roundId))
     .then(setSeatInfo)
     .catch(e => {
       console.log("getCurrentSeatApi fail!!");
