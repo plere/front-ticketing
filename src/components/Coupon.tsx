@@ -1,6 +1,21 @@
+import { tempReservationTokenStore } from "../stores/tempReservationStore";
+
 export function Coupon() {
+   const tempReservation = tempReservationTokenStore((state) => state.tempReservation);
+
   return (
     <>
+    <div>
+      선택한 좌석<br />
+      {tempReservation.seatIds.map(seat => {
+        return (
+          <>
+            {seat}
+            <br />
+          </>
+        );
+      })}
+    </div>
     <table style={{ width: "80%", margin: "0 auto", tableLayout:"fixed", borderCollapse: "collapse"}}>
       <tbody>
         <tr>
