@@ -2,11 +2,10 @@ import "./style.css";
 import { useEffect, useRef, useState } from "react";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import type { TossPaymentsWidgets, WidgetPaymentMethodWidget } from "@tosspayments/tosspayments-sdk";
-import type { PayInfo } from "./type/PayInfo";
 import { tempReservationTokenStore } from "../../stores/tempReservationStore";
-import { getPayInfo } from "../ReserveApi";
+import type { PayInfo } from "../../api/type/PayInfo";
+import { getPayInfo } from "../../api/ReserveApi";
 
-const generateRandomString = () => window.btoa(Math.random().toString()).slice(0, 20);
 const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 
 export function CheckoutPage() {

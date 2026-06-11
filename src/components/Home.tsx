@@ -2,7 +2,6 @@ import { useState } from "react";
 import { getAllConcertApi } from "../api/ConcertApi";
 import type { GetAllConcertPageResponse } from "../api/type/GetAllConcertResponse";
 import { Link } from "react-router-dom";
-// import { createTempReservationApi } from "../api/ReserveApi";
 
 export default function Home() {
   const [name, setName] = useState("");
@@ -50,7 +49,7 @@ export default function Home() {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
       </div>
     </div>
   );

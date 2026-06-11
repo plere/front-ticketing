@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Reservation } from "../../types/Reservation";
 import { useParams } from "react-router-dom";
-import { executePayment } from "../ReserveApi";
+import { executePayment } from "../../api/ReserveApi";
 
 export function PaySuccessPage() {
   const [isConfirmed, setIsConfirmed] = useState(false);

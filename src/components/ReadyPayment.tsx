@@ -1,4 +1,5 @@
-import { CheckoutPage } from "../api/pay/Checkout";
+import { CheckoutPage } from "./pay/Checkout";
+
 
 export function ReadyPayment() {
 

@@ -6,12 +6,12 @@ import Layout from './Layout'
 import { useAuthStore } from './stores/authStore'
 import { useEffect } from 'react'
 import Reserve from './components/Reserve'
-import { CheckoutPage } from './api/pay/Checkout'
-import { PaySuccessPage } from './api/pay/Success'
-import { PayFailPage } from './api/pay/Fail'
 import ReserveWaiting from './components/ReserveWaiting'
 import { Coupon } from './components/Coupon'
 import { ReadyPayment } from './components/ReadyPayment'
+import { CheckoutPage } from './components/pay/Checkout'
+import { PaySuccessPage } from './components/pay/Success'
+import { PayFailPage } from './components/pay/Fail'
 
 function App() {
   const fetchMe = useAuthStore((s) => s.fetchMe);
