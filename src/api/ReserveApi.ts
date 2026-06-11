@@ -3,10 +3,12 @@ import { setupInterceptors, type CustomAxiosRequestConfig } from "./axiosInterce
 import { reservationTokenStore } from "../stores/reservationTokenStore";
 import { JsonToUrlEncoding } from "../util/JsonToUrlEncdoing";
 import type { TempReservation } from "../types/TempReservation";
+import type { Reservation } from "../types/Reservation";
+import type { executePaymentRequest, PayInfo } from "./type/PayInfo";
 
 const api = setupInterceptors(
   axios.create({
-    baseURL: "http://localhost:8083", // Spring 서버
+    baseURL: "http://localhost:8083", // reservation 서버
     withCredentials: true
 }));
 
@@ -43,4 +45,16 @@ export const getTempReservationApi = async (concertId: number, roundId: number):
 
 export const readyReservationPay = async (): Promise<void> => {
   await api.get<{body: readyReservationPayRes}>(`/reservation/payment/1`);
-}
+};
+
+export const getPayInfo = async (id: number): Promise<PayInfo> => {
+  const response = await api.get<{body: PayInfo}>(`/reservation/payment/${id}`);
+
+  return response.data.body;
+};
+
+export const executePayment = async (body: executePaymentRequest): Promise<Reservation> => {
+  const response = await api.post<{body: Reservation}>(`/reservation/payment`, body);
+
+  return response.data.body;
+};
