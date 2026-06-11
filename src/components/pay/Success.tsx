@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { executePayment } from "./api/ReservationApi";
+import type { Reservation } from "../../types/Reservation";
+import { useParams } from "react-router-dom";
+import { executePayment } from "../ReserveApi";
 
 export function PaySuccessPage() {
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [reservation, setReservation] = useState<Reservation|null>(null);
+  const { reservationId } = useParams<{reservationId: string}>();
   const searchParams = new URLSearchParams(window.location.search);
   const paymentKey = searchParams.get("paymentKey");
   const orderId = searchParams.get("orderId");
@@ -12,31 +16,15 @@ export function PaySuccessPage() {
     // TODO: API를 호출해서 서버에게 paymentKey, orderId, amount를 넘겨주세요.
     // 서버에선 해당 데이터를 가지고 승인 API를 호출하면 결제가 완료됩니다.
     // https://docs.tosspayments.com/reference#%EA%B2%B0%EC%A0%9C-%EC%8A%B9%EC%9D%B8
-    await executePayment({
-      id: 1,
+    const res = await executePayment({
+      id: Number(reservationId),
       paymentKey: paymentKey || "",
       orderId: orderId || "",
       amount: amount || ""
    });
-
-    // const response = await fetch("/sandbox-dev/api/v1/payments/confirm", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({
-    //     paymentKey,
-    //     orderId,
-    //     amount
-    //   })
-    // });
-
-    // if (response.ok) {
-    //   setIsConfirmed(true);
-    // }
-
+   setReservation(res);
     setIsConfirmed(true);
-  }
+  };
 
   return (
     <div className="wrapper w-100">
@@ -70,6 +58,12 @@ export function PaySuccessPage() {
               <span className="response-label">paymentKey</span>
               <span id="paymentKey" className="response-text">
                 {paymentKey}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="response-label">order-id</span>
+              <span id="paymentKey" className="response-text">
+                {reservation?.orderId}
               </span>
             </div>
           </div>

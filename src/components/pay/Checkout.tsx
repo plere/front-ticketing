@@ -2,8 +2,9 @@ import "./style.css";
 import { useEffect, useRef, useState } from "react";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import type { TossPaymentsWidgets, WidgetPaymentMethodWidget } from "@tosspayments/tosspayments-sdk";
-import { getPayInfo } from "./api/ReservationApi";
-import type { PayInfo } from "./api/type/PayInfo";
+import type { PayInfo } from "./type/PayInfo";
+import { tempReservationTokenStore } from "../../stores/tempReservationStore";
+import { getPayInfo } from "../ReserveApi";
 
 const generateRandomString = () => window.btoa(Math.random().toString()).slice(0, 20);
 const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
@@ -16,17 +17,13 @@ export function CheckoutPage() {
    orderName: "",
    amount: ""
   });
-  const [amount, setAmount] = useState({
-    currency: "KRW",
-    value: 50_000,
-  });
   const paymentMethodWidgetRef = useRef<WidgetPaymentMethodWidget>(null);
+  const tempReservation = tempReservationTokenStore((state) => state.tempReservation);
 
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
       const tossPayments = await loadTossPayments(clientKey);
-      // const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
       const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
       setWidgets(widgets);
     }
@@ -40,7 +37,7 @@ export function CheckoutPage() {
         return;
       }
 
-      const responsePayInfo = await getPayInfo(1);
+      const responsePayInfo = await getPayInfo(tempReservation.id);
       setPayInfo(responsePayInfo);      
       
       /**
@@ -130,7 +127,7 @@ export function CheckoutPage() {
                   orderName: payInfo.orderName,
                   customerName: "김토스",
                   customerEmail: "customer123@gmail.com",
-                  successUrl: window.location.origin + "/pay/success" + window.location.search,
+                  successUrl: `${window.location.origin}/pay/${tempReservation.id}/success${window.location.search}`,
                   failUrl: window.location.origin + "/pay/fail" + window.location.search
                 });
               } catch (error) {
