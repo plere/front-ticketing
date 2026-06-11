@@ -1,7 +1,12 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { tempReservationTokenStore } from "../stores/tempReservationStore";
 
 export function Coupon() {
+  const navigate = useNavigate();
+  const { concertId } = useParams<{concertId: string}>();
+  const { roundId } = useParams<{roundId: string}>();
    const tempReservation = tempReservationTokenStore((state) => state.tempReservation);
+  
 
   return (
     <>
@@ -37,7 +42,7 @@ export function Coupon() {
               border: "none"         // 마지막 행은 테두리를 없애면 더 깔끔합니다
             }}
           >
-            <button style={{ padding: "8px 16px", cursor: "pointer" }}>다음단계</button>
+            <button style={{ padding: "8px 16px", cursor: "pointer" }} onClick={() => navigate(`/concerts/${concertId}/${roundId}/reserve/payment`)}>다음단계</button>
           </td>
         </tr>
       </tbody>
