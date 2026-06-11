@@ -1,5 +1,5 @@
 import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { reservationTokenStore } from "../stores/reservationTokenStore";
+import { getToken } from "./LoginApi";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   customHeaders?: {
@@ -10,6 +10,7 @@ export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     status: number,
     handler: (error: AxiosError) => Promise<never>
   }[];
+  _retry?: boolean;
 };
 
 export const setupInterceptors = (axiosInstance: AxiosInstance): AxiosInstance => {
@@ -27,20 +28,31 @@ export const setupInterceptors = (axiosInstance: AxiosInstance): AxiosInstance =
     (response: AxiosResponse) => {
       return response;
     },
-    (error: AxiosError) => {
+    async (error: AxiosError) => {
       const originalConfig = error.config as CustomAxiosRequestConfig;
       if (error.response) {
         const { status } = error.response;
 
         if (status === 401) {
-          const findHandler = originalConfig?.handlers?.find(handler => handler.status === 401);
+          try{
+            if(!originalConfig._retry) {
+              originalConfig._retry = true;
+              await getToken();
 
-          if(findHandler) {
-            return findHandler?.handler(error);
-          }
-          
-          console.error('인증 에러: 로그인이 필요합니다.');
-          window.location.href = '/';
+              return axiosInstance(originalConfig);
+            } else {
+              throw new Error("조건 불일치");
+            }
+          } catch(err) {
+            const findHandler = originalConfig?.handlers?.find(handler => handler.status === 401);
+
+            if(findHandler) {
+              return findHandler?.handler(error);
+            }
+            
+            console.error('인증 에러: 로그인이 필요합니다.');
+            window.location.href = '/';
+          }          
         } else if (status === 500) {
           console.error('서버 에러가 발생했습니다.');
         }
